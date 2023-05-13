@@ -11,12 +11,16 @@ nginx的HTTP和反向代理web服务器，同时也提供了IMAP/POP3/SMTP服务
 
 0x03 空字节任意代码执行漏洞
 原理：Ngnix在遇到%00空字节时与后端FastCGI处理不一致，导致可以在图片中嵌入PHP代码然后通过访问xxx.jpg%00.php来执行其中的代码.
+例如请求  GET /test.php%00.jpg HTTP/1.1
+          Host: example.com**
+ 这个请求看起来像是请求一张名为“test.php.jpg”的图片，但是由于包含了空字节，Nginx会将其解析为请求“test.php”，这样攻击者就可以执行任意PHP代码。
 影响版本
 nginx 0.5.xx
 nginx 0.6.xx
 nginx 0.7 <= 0.7.65
 nginx 0.8 <= 0.8.37
 首先上传写入木马的1.jpg ，然后访问1.jpg..php，再抓包放到重放器模块将hex选项卡中的jpg后面的一个"." 修改为00就成功绕过。
+
 
 0x03 CRLF注入漏洞
 原理：
